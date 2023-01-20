@@ -1,6 +1,6 @@
 # Scrambler
 
-**TODO: Add description**
+Elixir library for scrambling cubes and displaying them.
 
 ## Installation
 
