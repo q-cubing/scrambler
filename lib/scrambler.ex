@@ -72,19 +72,28 @@ defmodule Scrambler do
   def gen_scramble(result, 0, _), do: result
 
   def gen_scramble(scramble, size, scramble_moves) do
-    # start scramble
+    <<i1::unsigned-integer-32, i2::unsigned-integer-32, i3::unsigned-integer-32>> =
+      :crypto.strong_rand_bytes(12)
+
+    :rand.seed(:exsp, {i1, i2, i3})
+
     [h | _] = scramble
 
     move_choice =
       scramble_moves
       |> Enum.reject(fn n -> h in n end)
       |> Enum.random()
+      |> Enum.shuffle()
 
     gen_scramble([Enum.random(move_choice) | scramble], size - 1, scramble_moves)
   end
 
   def gen_scramble(scramble_type) when is_binary(scramble_type) do
-    # new scramble
+    <<i1::unsigned-integer-32, i2::unsigned-integer-32, i3::unsigned-integer-32>> =
+      :crypto.strong_rand_bytes(12)
+
+    :rand.seed(:exsp, {i1, i2, i3})
+
     {scramble_size, scramble_moves} = @moves_set[scramble_type]
     move_choice = Enum.random(scramble_moves)
     gen_scramble([Enum.random(move_choice)], Enum.random(scramble_size) - 1, scramble_moves)
